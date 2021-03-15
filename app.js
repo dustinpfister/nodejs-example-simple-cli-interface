@@ -1,5 +1,20 @@
 #!/usr/bin/env node
 
+// what to do with a single byte buffer
+let processByte = (buff) => {
+    console.log(buff);
+};
+
+// what to do with a buffer > 1 byte
+let processBuff = (buff) => {
+    let char = buff.toString(),
+    hex = buff.toString('hex');
+    console.log('control stroke');
+    console.log('hex: ' + hex);
+    console.log('str: ' + char);
+    console.log('data buff length: ' + buff.length);
+};
+
 // to quit call process.exit with exit code
 let onQuit = (code) => {
    // assume value of process.exitCode if noe status code is given
@@ -24,16 +39,12 @@ let isRaw = () => {
     return false;
 };
 
-// what to do with a single byte buffer
-let processByte = (buff) => {
-    console.log(buff);
-};
-
 // enter raw mode if possible
 if(isRaw()){
     process.stdin.setRawMode(true);
 }
 
+// modes for raw use and pipping
 let modes = {
     // for raw mode ( $ node app.js)
     raw: (data) => {
@@ -48,10 +59,7 @@ let modes = {
                 processByte(data);
             }
             if(data.length > 1){
-                console.log('control stroke');
-                console.log('hex: ' + hex);
-                console.log('str: ' + char);
-                console.log('data buff length: ' + data.length);
+                processBuff(data);
             }
         }
     },
