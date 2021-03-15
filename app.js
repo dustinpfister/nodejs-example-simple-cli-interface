@@ -24,22 +24,43 @@ let isRaw = () => {
     return false;
 };
 
+// what to do with a single byte buffer
+let processByte = (byte) => {
+    
+};
+
 // enter raw mode if possible
 if(isRaw()){
     process.stdin.setRawMode(true);
 }
 
+let modes = {
+    // for raw mode ( $ node app.js)
+    raw: (data) => {
+        // char and hex strings
+        let char = data.toString(),
+        hex = data.toString('hex');
+        // exit code check (press q,Q, or ctrl+c aka '03' in hex)
+        if(char.toLowerCase() === 'q' || hex === '03'){
+            onQuit();
+        }else{
+            process.stdout.write(data.length + '\n');
+            process.stdout.write(hex + '\n');
+        }
+    },
+    // for pipping ( $ echo -n "abcd" | node app.js)
+    notRaw: (data) => {
+        console.log('NOT RAW');
+        console.log(data.toString('hex'))
+    }
+
+}
+
 // for each data event from the standard input
 process.stdin.on('data', (data) => {
-    // char and hex strings
-    let char = data.toString(),
-    hex = data.toString('hex');
-    // exit code check (press q,Q, or ctrl+c aka '03' in hex)
-    if(char.toLowerCase() === 'q' || hex === '03'){
-        onQuit();
+    if(isRaw()){
+        modes['raw'](data);
     }else{
-       process.stdout.write('rawMode: ' + isRaw() + '\n');
-       process.stdout.write(data.length + '\n');
-       process.stdout.write(hex + '\n');
+        modes['notRaw'](data);
     }
 });
