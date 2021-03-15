@@ -6,6 +6,7 @@ let onQuit = function(code){
    code = code === undefined ? process.exitCode : code;
    // print a line feed
    process.stdout.write('\n');
+   // end process with exit code
    process.exit(code);
 };
 
@@ -25,11 +26,11 @@ process.stdin.on('data', (data) => {
     // char and hex strings
     let char = data.toString(),
     hex = data.toString('hex');
-    // exit code check
+    // exit code check (press q,Q, or ctrl+c aka '03' in hex)
     if(char.toLowerCase() === 'q' || hex === '03'){
         onQuit();
     }else{
-       console.log(hex);
+       process.stdout.write(hex + '\n');
     }
 });
 
