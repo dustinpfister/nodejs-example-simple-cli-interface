@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 // to quit call process.exit with exit code
-let onQuit = function(code){
+let onQuit = (code) => {
    // assume value of process.exitCode if noe status code is given
    code = code === undefined ? process.exitCode : code;
    // print a line feed
@@ -17,7 +17,15 @@ let onQuit = function(code){
 // ( $ node app.js )
 // which is fine becuase I only want to enter raw mode
 // when the script is called that way
-if(process.stdin.setRawMode){
+let isRaw = () => {
+    if(process.stdin.setRawMode){
+       return true;
+    }
+    return false;
+};
+
+// enter raw mode if possible
+if(isRaw()){
     process.stdin.setRawMode(true);
 }
 
@@ -30,8 +38,8 @@ process.stdin.on('data', (data) => {
     if(char.toLowerCase() === 'q' || hex === '03'){
         onQuit();
     }else{
+       process.stdout.write('rawMode: ' + isRaw() + '\n');
+       process.stdout.write(data.length + '\n');
        process.stdout.write(hex + '\n');
     }
 });
-
-
