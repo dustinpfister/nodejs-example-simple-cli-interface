@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-
 // to quit call process.exit with exit code
 let onQuit = function(code){
    // assume value of process.exitCode if noe status code is given
@@ -15,12 +14,16 @@ process.stdin.setRawMode(true);
 
 // for each data event from the standard input
 process.stdin.on('data', (data) => {
+    // char and hex strings
+    let char = data.toString(),
+    hex = data.toString('hex');
 
-    let char = data.toString();
-    if(char.toLowerCase() === 'q'){
+    // exit code check
+    if(char.toLowerCase() === 'q' || hex === '03'){
         onQuit();
+    }else{
+       console.log(hex);
     }
-
 });
 
 
