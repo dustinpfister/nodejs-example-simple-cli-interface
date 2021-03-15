@@ -9,15 +9,22 @@ let onQuit = function(code){
    process.exit(code);
 };
 
-//set in raw mode and capture key strokes
-process.stdin.setRawMode(true);
+// if process.stdin.setRawMode, enter raw mode
+// this seems to end up being undefined when piping stdin
+// ( $ echo "abcdq" | node app.js )
+// however it will be there when called directly
+// ( $ node app.js )
+// which is fine becuase I only want to enter raw mode
+// when the script is called that way
+if(process.stdin.setRawMode){
+    process.stdin.setRawMode(true);
+}
 
 // for each data event from the standard input
 process.stdin.on('data', (data) => {
     // char and hex strings
     let char = data.toString(),
     hex = data.toString('hex');
-
     // exit code check
     if(char.toLowerCase() === 'q' || hex === '03'){
         onQuit();
