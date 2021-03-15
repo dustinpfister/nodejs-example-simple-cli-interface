@@ -44,10 +44,14 @@ let modes = {
         if(char.toLowerCase() === 'q' || hex === '03'){
             onQuit();
         }else{
-            //process.stdout.write(data.length + '\n');
-            //process.stdout.write(hex + '\n');
             if(data.length === 1){
                 processByte(data);
+            }
+            if(data.length > 1){
+                console.log('control stroke');
+                console.log('hex: ' + hex);
+                console.log('str: ' + char);
+                console.log('data buff length: ' + data.length);
             }
         }
     },
